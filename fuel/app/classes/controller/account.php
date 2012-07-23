@@ -15,25 +15,15 @@ class Controller_Account extends Controller_Base
     {
         if ($this->session->isAuthenticated()) {
             Response::redirect('/account');
-            //return $this->redirect('/account');
         }
 
         $data = array(
-           'user_name'=>'',
-           'password'=>'',
-           'session' => $this->session,
+           'user_name' => '',
+           'password'  => '',
         );
         $this->template->title   = 'アカウント登録';
         $this->template->session = $this->session;
         $this->template->content = View::forge('account/signup', $data);
-
-/*
-        return $this->render(array(
-            'user_name' => '',
-            'password'  => '',
-            '_token'    => $this->generateCsrfToken('account/signup'),
-        ));
-*/
     }
 
     public function action_register()
@@ -46,12 +36,6 @@ class Controller_Account extends Controller_Base
             throw new HttpNotFoundException;;
         }
 
-/*
-        $token = $this->request->getPost('_token');
-        if (!$this->checkCsrfToken('account/signup', $token)) {
-            return $this->redirect('/account/signup');
-        }
-*/
         // CSRFトークンが正しいかチェック
         if ( ! \Security::check_token())
         {
@@ -61,8 +45,6 @@ class Controller_Account extends Controller_Base
     
         $user_name = Input::post('user_name');
         $password  = Input::post('password');
-//        $this->request->getPost('user_name');
-//        $password = $this->request->getPost('password');
 
         $errors = array();
 
@@ -91,22 +73,13 @@ class Controller_Account extends Controller_Base
         }
 
         $data = array(
-           'user_name'=>$user_name,
-           'password'=>$password,
+           'user_name' => $user_name,
+           'password'  => $password,
            'errors'    => $errors,
-           'session' => $this->session,
         );
         $this->template->title   = 'アカウント登録';
         $this->template->session = $this->session;
         $this->template->content = View::forge('account/signup', $data);
-/*
-        return $this->render(array(
-            'user_name' => $user_name,
-            'password'  => $password,
-            'errors'    => $errors,
-            '_token'    => $this->generateCsrfToken('account/signup'),
-        ), 'signup');
-*/
     }
 
     public function action_index()
@@ -115,12 +88,6 @@ class Controller_Account extends Controller_Base
         $followings = $this->db_manager->get('User')
             ->fetchAllFollowingsByUserId($user['id']);
 
-        /*
-        return $this->render(array(
-            'user'       => $user,
-            'followings' => $followings,
-        ));
-        */
         $data = array(
             'user'       => $user,
             'followings' => $followings,
@@ -136,13 +103,6 @@ class Controller_Account extends Controller_Base
             Response::redirect('/account');
         }
 
-        /*
-        return $this->render(array(
-            'user_name' => '',
-            'password'  => '',
-            '_token'    => $this->generateCsrfToken('account/signin'),
-        ));
-        */
         $data = array(
             'user_name' => '',
             'password'  => '',
@@ -198,19 +158,10 @@ class Controller_Account extends Controller_Base
             }
         }
 
-        /*
-        return $this->render(array(
-            'user_name' => $user_name,
-            'password'  => $password,
-            'errors'    => $errors,
-            '_token'    => $this->generateCsrfToken('account/signin'),
-        ), 'signin');
-        */
         $data = array(
             'user_name' => $user_name,
             'password'  => $password,
             'errors'    => $errors,
-            'session'   => $this->session,
         );
         $this->template->title   = 'ログイン';
         $this->template->session = $this->session;
@@ -259,6 +210,5 @@ class Controller_Account extends Controller_Base
         }
 
         Response::redirect('/account');
-        
     }
 }

@@ -1,5 +1,3 @@
-<?php //$this->setLayoutVar('title', $user['user_name']) ?>
-
 <h2><?php echo $user['user_name']; ?></h2>
 
 <?php if (!is_null($following)): ?>

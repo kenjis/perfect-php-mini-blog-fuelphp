@@ -15,13 +15,6 @@ class Controller_Status extends Controller_Base
         $statuses = $this->db_manager->get('Status')
             ->fetchAllPersonalArchivesByUserId($user['id']);
 
-        /*
-        return $this->render(array(
-            'statuses' => $statuses,
-            'body'     => '',
-            '_token'   => $this->generateCsrfToken('status/post'),
-        ));
-        */
         $data = array(
             'statuses' => $statuses,
             'body'     => '',
@@ -33,7 +26,7 @@ class Controller_Status extends Controller_Base
 
     public function action_post()
     {
-        if (Input::method() != 'POST') {
+        if (Input::method() !== 'POST') {
             throw new HttpNotFoundException;
         }
 
@@ -65,14 +58,6 @@ class Controller_Status extends Controller_Base
         $statuses = $this->db_manager->get('Status')
             ->fetchAllPersonalArchivesByUserId($user['id']);
 
-        /*
-        return $this->render(array(
-            'errors'   => $errors,
-            'body'     => $body,
-            'statuses' => $statuses,
-            '_token'   => $this->generateCsrfToken('status/post'),
-        ), 'index');
-        */
         $data = array(
             'errors'   => $errors,
             'body'     => $body,
@@ -103,14 +88,6 @@ class Controller_Status extends Controller_Base
             }
         }
 
-        /*
-        return $this->render(array(
-            'user'      => $user,
-            'statuses'  => $statuses,
-            'following' => $following,
-            '_token'    => $this->generateCsrfToken('account/follow'),
-        ));
-        */
         $data = array(
             'user'      => $user,
             'statuses'  => $statuses,
@@ -135,6 +112,9 @@ class Controller_Status extends Controller_Base
         $this->template->content = View::forge('status/show', array('status' => $status));
     }
 
+    /**
+     * 未使用？
+     */
     public function action_signin()
     {
         if ($this->session->isAuthenticated()) {

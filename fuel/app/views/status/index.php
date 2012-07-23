@@ -1,5 +1,3 @@
-<?php //$this->setLayoutVar('title', 'ホーム') ?>
-
 <h2>ホーム</h2>
 
 <form action="<?php echo Uri::base(); ?>status/post" method="post">
@@ -7,10 +5,7 @@
 
     <?php if (isset($errors) && count($errors) > 0): ?>
     <?php
-    $data = array(
-        'errors' => $errors,
-    );
-    echo View::forge('errors', $data);
+    echo View::forge('errors', array('errors' => $errors));
     ?>
     <?php endif; ?>
 
