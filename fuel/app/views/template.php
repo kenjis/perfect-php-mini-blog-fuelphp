@@ -10,16 +10,16 @@
 </head>
 <body>
     <div id="header">
-        <h1><a href="<?php echo Uri::base(); ?>/">Mini Blog</a></h1>
+        <h1><a href="<?php echo Uri::base(); ?>">Mini Blog</a></h1>
     </div>
     <div id="nav">
         <p>
             <?php if ($session->isAuthenticated()): ?>
-                <a href="<?php echo Uri::base(); ?>/">ホーム</a>
-                <a href="<?php echo Uri::base(); ?>/account">アカウント</a>
+                <a href="<?php echo Uri::base(); ?>">ホーム</a>
+                <a href="<?php echo Uri::base(); ?>account">アカウント</a>
             <?php else: ?>
-                <a href="<?php echo Uri::base(); ?>/account/signin">ログイン</a>
-                <a href="<?php echo Uri::base(); ?>/account/signup">アカウント登録</a>
+                <a href="<?php echo Uri::base(); ?>account/signin">ログイン</a>
+                <a href="<?php echo Uri::base(); ?>account/signup">アカウント登録</a>
             <?php endif; ?>
         </p>
     </div>
