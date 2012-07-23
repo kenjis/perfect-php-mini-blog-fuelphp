@@ -5,12 +5,10 @@
  *
  * @author Katsuhiro Ogawa <fivestar@nequal.jp>
  */
-//include_once(dirname(__FILE__).'/session.php');
 class Controller_Account extends Controller_Template
 {
     protected $auth_actions = array('index', 'signout', 'follow');
     protected $session = null;
-
 
     public function before(){
         parent::before();
@@ -22,7 +20,6 @@ class Controller_Account extends Controller_Template
             'password' => '',
         ));
     }
-
 
     public function action_signup()
     {
@@ -73,7 +70,7 @@ class Controller_Account extends Controller_Template
         }
     
         $user_name = Input::post('user_name');
-        $password = Input::post('password');
+        $password  = Input::post('password');
 //        $this->request->getPost('user_name');
 //        $password = $this->request->getPost('password');
 
@@ -102,7 +99,6 @@ class Controller_Account extends Controller_Template
 
             Response::redirect('/');
         }
-
 
         $data = array(
            'user_name'=>$user_name,
@@ -136,8 +132,8 @@ class Controller_Account extends Controller_Template
         ));
         */
         $data = array(
-                   'user'       => $user,
-                   'followings' => $followings,
+            'user'       => $user,
+            'followings' => $followings,
         );
         $this->template->title   = 'アカウント';
         $this->template->session = $this->session;
@@ -147,7 +143,7 @@ class Controller_Account extends Controller_Template
     public function action_signin()
     {
         if ($this->session->isAuthenticated()) {
-        	Response::redirect('/account');
+            Response::redirect('/account');
         }
 
         /*
@@ -158,8 +154,8 @@ class Controller_Account extends Controller_Template
         ));
         */
         $data = array(
-                           'user_name' => '',
-                           'password'  => '',
+            'user_name' => '',
+            'password'  => '',
         );
         $this->template->title   = 'ログイン';
         $this->template->session = $this->session;
