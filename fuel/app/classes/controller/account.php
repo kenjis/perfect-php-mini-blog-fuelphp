@@ -16,6 +16,11 @@ class Controller_Account extends Controller_Template
         parent::before();
         $this->session  = new Session();
         $this->db_manager  = new DbManager();
+        $this->db_manager->connect('master', array(
+            'dsn'      => 'mysql:dbname=mini_blog;host=localhost;charset=utf8',
+            'user'     => 'root',
+            'password' => '',
+        ));
     }
 
 
@@ -95,7 +100,7 @@ class Controller_Account extends Controller_Template
             $user = $this->db_manager->get('User')->fetchByUserName($user_name);
             $this->session->set('user', $user);
 
-            return $this->redirect('/');
+            Response::redirect('/');
         }
 
 
@@ -124,10 +129,19 @@ class Controller_Account extends Controller_Template
         $followings = $this->db_manager->get('User')
             ->fetchAllFollowingsByUserId($user['id']);
 
+        /*
         return $this->render(array(
             'user'       => $user,
             'followings' => $followings,
         ));
+        */
+        $data = array(
+                   'user'       => $user,
+                   'followings' => $followings,
+        );
+        $this->template->title   = 'アカウント';
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('account/index', $data);
     }
 
     public function action_signin()
