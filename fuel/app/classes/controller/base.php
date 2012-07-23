@@ -5,7 +5,7 @@
  */
 class Controller_Base extends Controller_Template
 {
-    protected $auth_actions; // @TODO
+    protected $auth_actions;
     protected $session;
     protected $db_manager;
     
@@ -13,6 +13,17 @@ class Controller_Base extends Controller_Template
         parent::before();
 
         $this->session  = new Session();
+
+        // 認証が必要なアクションのチェック
+        if ($this->auth_actions === true
+            || (is_array($this->auth_actions) && in_array($this->request->route->action, $this->auth_actions))
+        ) {
+            // 認証が必要
+            if ( ! $this->session->isAuthenticated())
+            {
+                Response::redirect('account/signin');
+            }
+        }
 
         $this->db_manager  = new DbManager();
         Config::load('db', true);

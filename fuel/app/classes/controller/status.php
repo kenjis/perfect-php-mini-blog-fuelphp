@@ -7,7 +7,7 @@
  */
 class Controller_Status extends Controller_Base
 {
-    protected $auth_actions = array('index', 'post'); // @TODO
+    protected $auth_actions = array('index', 'post');
 
     public function action_index()
     {

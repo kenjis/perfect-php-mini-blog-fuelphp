@@ -7,7 +7,7 @@
  */
 class Controller_Account extends Controller_Base
 {
-    protected $auth_actions = array('index', 'signout', 'follow'); // @TODO
+    protected $auth_actions = array('index', 'signout', 'follow');
     protected $session;
     protected $db_manager;
 
