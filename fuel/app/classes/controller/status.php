@@ -5,11 +5,11 @@
  *
  * @author Katsuhiro Ogawa <fivestar@nequal.jp>
  */
-class StatusController extends Controller
+class Controller_Status extends Controller_Template
 {
     protected $auth_actions = array('index', 'post');
 
-    public function indexAction()
+    public function action_index()
     {
         $user = $this->session->get('user');
         $statuses = $this->db_manager->get('Status')
@@ -22,7 +22,7 @@ class StatusController extends Controller
         ));
     }
 
-    public function postAction()
+    public function action_post()
     {
         if (!$this->request->isPost()) {
             $this->forward404();
@@ -62,7 +62,7 @@ class StatusController extends Controller
         ), 'index');
     }
 
-    public function userAction($params)
+    public function action_user($params)
     {
         $user = $this->db_manager->get('User')
             ->fetchByUserName($params['user_name']);
@@ -90,7 +90,7 @@ class StatusController extends Controller
         ));
     }
 
-    public function showAction($params)
+    public function action_show($params)
     {
         $status = $this->db_manager->get('Status')
             ->fetchByIdAndUserName($params['id'], $params['user_name']);
@@ -102,7 +102,7 @@ class StatusController extends Controller
         return $this->render(array('status' => $status));
     }
 
-    public function signinAction()
+    public function action_signin()
     {
         if ($this->session->isAuthenticated()) {
             return $this->redirect('/account');
