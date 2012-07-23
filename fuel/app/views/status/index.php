@@ -1,15 +1,20 @@
-<?php $this->setLayoutVar('title', 'ホーム') ?>
+<?php //$this->setLayoutVar('title', 'ホーム') ?>
 
 <h2>ホーム</h2>
 
-<form action="<?php echo $base_url; ?>/status/post" method="post">
-    <input type="hidden" name="_token" value="<?php echo $this->escape($_token); ?>" />
+<form action="<?php echo Uri::base(); ?>status/post" method="post">
+    <input type="hidden" name="<?php echo Config::get('security.csrf_token_key');?>" value="<?php echo Security::fetch_token();?>" />
 
     <?php if (isset($errors) && count($errors) > 0): ?>
-    <?php echo $this->render('errors', array('errors' => $errors)) ?>
+    <?php
+    $data = array(
+        'errors' => $errors,
+    );
+    echo View::forge('errors', $data);
+    ?>
     <?php endif; ?>
 
-    <textarea name="body" rows="2" cols="60"><?php echo $this->escape($body); ?></textarea>
+    <textarea name="body" rows="2" cols="60"><?php echo $body; ?></textarea>
     <p>
         <input type="submit" value="発言" />
     </p>
@@ -17,6 +22,6 @@
 
 <div id="statuses">
     <?php foreach ($statuses as $status): ?>
-    <?php echo $this->render('status/status', array('status' => $status)); ?>
+    <?php echo View::forge('status/status', array('status' => $status)); ?>
     <?php endforeach; ?>
 </div>

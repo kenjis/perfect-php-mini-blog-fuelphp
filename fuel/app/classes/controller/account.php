@@ -7,7 +7,7 @@
  */
 class Controller_Account extends Controller_Template
 {
-    protected $auth_actions = array('index', 'signout', 'follow');
+    protected $auth_actions = array('index', 'signout', 'follow'); // @TODO
     protected $session = null;
 
     public function before(){
@@ -165,20 +165,22 @@ class Controller_Account extends Controller_Template
     public function action_authenticate()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            Response::redirect('/account');
         }
 
-        if (!$this->request->isPost()) {
-            $this->forward404();
+        if (Input::method() !== 'POST') {
+            new HttpNotFoundException();
         }
 
-        $token = $this->request->getPost('_token');
-        if (!$this->checkCsrfToken('account/signin', $token)) {
-            return $this->redirect('/account/signin');
+        // CSRFトークンが正しいかチェック
+        if ( ! Security::check_token())
+        {
+        	// CSRF攻撃またはCSRFトークンの期限切れ
+        	Response::redirect('/account/signup');
         }
 
-        $user_name = $this->request->getPost('user_name');
-        $password = $this->request->getPost('password');
+        $user_name = Input::post('user_name');
+        $password  = Input::post('password');
 
         $errors = array();
 
@@ -202,16 +204,27 @@ class Controller_Account extends Controller_Template
                 $this->session->setAuthenticated(true);
                 $this->session->set('user', $user);
 
-                return $this->redirect('/');
+                Response::redirect('/');
             }
         }
 
+        /*
         return $this->render(array(
             'user_name' => $user_name,
             'password'  => $password,
             'errors'    => $errors,
             '_token'    => $this->generateCsrfToken('account/signin'),
         ), 'signin');
+        */
+        $data = array(
+            'user_name' => $user_name,
+            'password'  => $password,
+            'errors'    => $errors,
+            'session'   => $this->session,
+        );
+        $this->template->title   = 'ログイン';
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('account/signin', $data);
     }
 
     public function action_signout()
@@ -224,24 +237,26 @@ class Controller_Account extends Controller_Template
 
     public function action_follow()
     {
-        if (!$this->request->isPost()) {
-            $this->forward404();
+        if (Input::method() !== 'POST') {
+            new HttpNotFoundException();
         }
 
-        $following_name = $this->request->getPost('following_name');
+        $following_name = Input::post('following_name');
         if (!$following_name) {
-            $this->forward404();
+            new HttpNotFoundException();
         }
 
-        $token = $this->request->getPost('_token');
-        if (!$this->checkCsrfToken('account/follow', $token)) {
-            return $this->redirect('/user/' . $following_name);
+        // CSRFトークンが正しいかチェック
+        if ( ! Security::check_token())
+        {
+        	// CSRF攻撃またはCSRFトークンの期限切れ
+        	Response::redirect('/user/' . $following_name);
         }
-
+        
         $follow_user = $this->db_manager->get('User')
             ->fetchByUserName($following_name);
         if (!$follow_user) {
-            $this->forward404();
+            new HttpNotFoundException();
         }
 
         $user = $this->session->get('user');
@@ -253,6 +268,7 @@ class Controller_Account extends Controller_Template
             $following_repository->insert($user['id'], $follow_user['id']);
         }
 
-        return $this->redirect('/account');
+        Response::redirect('/account');
+        
     }
 }

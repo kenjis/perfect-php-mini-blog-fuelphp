@@ -1,14 +1,14 @@
 <div class="status">
     <div class="status_content">
-        <a href="<?php echo $base_url; ?>/user/<?php echo $this->escape($status['user_name']); ?>">
-            <?php echo $this->escape($status['user_name']); ?>
+        <a href="<?php echo Uri::base(); ?>user/<?php echo $status['user_name']; ?>">
+            <?php echo $status['user_name']; ?>
         </a>
-        <?php echo $this->escape($status['body']); ?>
+        <?php echo $status['body']; ?>
     </div>
     <div>
-        <a href="<?php echo $base_url; ?>/user/<?php echo $this->escape($status['user_name']);
-        ?>/status/<?php echo $this->escape($status['id']); ?>">
-            <?php echo $this->escape($status['created_at']); ?>
+        <a href="<?php echo Uri::base(); ?>user/<?php echo $status['user_name'];
+        ?>/status/<?php echo $status['id']; ?>">
+            <?php echo $status['created_at']; ?>
         </a>
     </div>
 </div>

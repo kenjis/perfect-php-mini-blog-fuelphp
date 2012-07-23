@@ -7,7 +7,18 @@
  */
 class Controller_Status extends Controller_Template
 {
-    protected $auth_actions = array('index', 'post');
+    protected $auth_actions = array('index', 'post'); // @TODO
+
+    public function before(){
+        parent::before();
+        $this->session  = new Session();
+        $this->db_manager  = new DbManager();
+        $this->db_manager->connect('master', array(
+                'dsn'      => 'mysql:dbname=mini_blog;host=localhost;charset=utf8',
+                'user'     => 'root',
+                'password' => '',
+    	));
+    }
 
     public function action_index()
     {
@@ -15,25 +26,36 @@ class Controller_Status extends Controller_Template
         $statuses = $this->db_manager->get('Status')
             ->fetchAllPersonalArchivesByUserId($user['id']);
 
+        /*
         return $this->render(array(
             'statuses' => $statuses,
             'body'     => '',
             '_token'   => $this->generateCsrfToken('status/post'),
         ));
+        */
+        $data = array(
+            'statuses' => $statuses,
+            'body'     => '',
+        );
+        $this->template->title   = 'ホーム';
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('status/index', $data);
     }
 
     public function action_post()
     {
-        if (!$this->request->isPost()) {
-            $this->forward404();
+        if (Input::method() != 'POST') {
+            throw new HttpNotFoundException;
         }
 
-        $token = $this->request->getPost('_token');
-        if (!$this->checkCsrfToken('status/post', $token)) {
-            return $this->redirect('/');
+        // CSRFトークンが正しいかチェック
+        if ( ! \Security::check_token())
+        {
+        	// CSRF攻撃またはCSRFトークンの期限切れ
+            Response::redirect('/account/signup');
         }
 
-        $body = $this->request->getPost('body');
+        $body = Input::post('body');
 
         $errors = array();
 
@@ -47,27 +69,37 @@ class Controller_Status extends Controller_Template
             $user = $this->session->get('user');
             $this->db_manager->get('Status')->insert($user['id'], $body);
 
-            return $this->redirect('/');
+            Response::redirect('/');
         }
 
         $user = $this->session->get('user');
         $statuses = $this->db_manager->get('Status')
             ->fetchAllPersonalArchivesByUserId($user['id']);
 
+        /*
         return $this->render(array(
             'errors'   => $errors,
             'body'     => $body,
             'statuses' => $statuses,
             '_token'   => $this->generateCsrfToken('status/post'),
         ), 'index');
+        */
+        $data = array(
+            'errors'   => $errors,
+            'body'     => $body,
+            'statuses' => $statuses,
+        );
+        $this->template->title   = 'ホーム';
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('status/index', $data);
     }
 
-    public function action_user($params)
+    public function action_user()
     {
         $user = $this->db_manager->get('User')
-            ->fetchByUserName($params['user_name']);
+            ->fetchByUserName($this->param('user_name'));
         if (!$user) {
-            $this->forward404();
+            throw new HttpNotFoundException;
         }
 
         $statuses = $this->db_manager->get('Status')
@@ -82,30 +114,42 @@ class Controller_Status extends Controller_Template
             }
         }
 
+        /*
         return $this->render(array(
             'user'      => $user,
             'statuses'  => $statuses,
             'following' => $following,
             '_token'    => $this->generateCsrfToken('account/follow'),
         ));
+        */
+        $data = array(
+            'user'      => $user,
+            'statuses'  => $statuses,
+            'following' => $following,
+        );
+        $this->template->title   = $user['user_name'];
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('status/user', $data);
     }
 
-    public function action_show($params)
+    public function action_show()
     {
         $status = $this->db_manager->get('Status')
-            ->fetchByIdAndUserName($params['id'], $params['user_name']);
+            ->fetchByIdAndUserName($this->param('id'), $this->param('user_name'));
 
         if (!$status) {
-            $this->forward404();
+            throw new HttpNotFoundException;
         }
 
-        return $this->render(array('status' => $status));
+        $this->template->title   = $status['user_name'];
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('status/show', array('status' => $status));
     }
 
     public function action_signin()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            Response::redirect('/account');
         }
 
         return $this->render(array(

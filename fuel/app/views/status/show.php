@@ -1,3 +1,3 @@
-<?php $this->setLayoutVar('title', $status['user_name']) ?>
+<?php //$this->setLayoutVar('title', $status['user_name']) ?>
 
-<?php echo $this->render('status/status', array('status' => $status)); ?>
+<?php echo View::forge('status/status', array('status' => $status)); ?>

@@ -5,7 +5,7 @@
 </p>
 
 <form action="<?php echo Uri::base(); ?>account/authenticate" method="post">
-    <input type="hidden" name="<?php echo \Config::get('security.csrf_token_key');?>" value="<?php echo \Security::fetch_token();?>" />
+    <input type="hidden" name="<?php echo Config::get('security.csrf_token_key');?>" value="<?php echo Security::fetch_token();?>" />
 
     <?php if (isset($errors) && count($errors) > 0): ?>
         <?php
