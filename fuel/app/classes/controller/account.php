@@ -5,21 +5,11 @@
  *
  * @author Katsuhiro Ogawa <fivestar@nequal.jp>
  */
-class Controller_Account extends Controller_Template
+class Controller_Account extends Controller_Base
 {
     protected $auth_actions = array('index', 'signout', 'follow'); // @TODO
-    protected $session = null;
-
-    public function before(){
-        parent::before();
-        $this->session  = new Session();
-        $this->db_manager  = new DbManager();
-        $this->db_manager->connect('master', array(
-            'dsn'      => 'mysql:dbname=mini_blog;host=localhost;charset=utf8',
-            'user'     => 'root',
-            'password' => '',
-        ));
-    }
+    protected $session;
+    protected $db_manager;
 
     public function action_signup()
     {
