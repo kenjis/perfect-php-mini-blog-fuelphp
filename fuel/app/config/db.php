@@ -29,10 +29,11 @@ return array(
 			'port'      => 6379,
 		)
 	),
+	
+	// ミニブログ用
 	'master' => array(
-            'dsn'      => 'mysql:dbname=mini_blog;host=localhost;charset=utf8',
-            'user'     => 'root',
-            'password' => '',
-    ),
-
+		'dsn'      => 'mysql:dbname=mini_blog;host=localhost;charset=utf8',
+		'user'     => 'root',
+		'password' => '',
+	),
 );
