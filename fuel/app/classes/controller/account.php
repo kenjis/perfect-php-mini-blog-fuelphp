@@ -147,14 +147,23 @@ class Controller_Account extends Controller_Template
     public function action_signin()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+        	Response::redirect('/account');
         }
 
+        /*
         return $this->render(array(
             'user_name' => '',
             'password'  => '',
             '_token'    => $this->generateCsrfToken('account/signin'),
         ));
+        */
+        $data = array(
+                           'user_name' => '',
+                           'password'  => '',
+        );
+        $this->template->title   = 'ログイン';
+        $this->template->session = $this->session;
+        $this->template->content = View::forge('account/signin', $data);
     }
 
     public function action_authenticate()
@@ -214,7 +223,7 @@ class Controller_Account extends Controller_Template
         $this->session->clear();
         $this->session->setAuthenticated(false);
 
-        return $this->redirect('/account/signin');
+        Response::redirect('/account/signin');
     }
 
     public function action_follow()
